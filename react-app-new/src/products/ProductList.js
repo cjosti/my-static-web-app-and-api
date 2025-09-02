@@ -8,7 +8,6 @@ function ProductList({
   handleSelectProduct,
   products = [],
 }) {
-  console.log(products);
   const navigate = useNavigate(); // Use useNavigate hook for navigation
 
   function selectProduct(e) {

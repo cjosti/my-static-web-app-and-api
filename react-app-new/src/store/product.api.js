@@ -4,21 +4,6 @@ import API from './config';
 
 const captains = console;
 
-axios.interceptors.request.use(cfg => {
-  console.log('[API][request]', { baseURL: cfg.baseURL, url: cfg.url, method: cfg.method });
-  return cfg;
-});
-axios.interceptors.response.use(
-  res => {
-    console.log('[API][response]', { url: res.config.url, status: res.status });
-    return res;
-  },
-  err => {
-    console.error('[API][error]', err?.response?.status, err?.message);
-    return Promise.reject(err);
-  }
-);
-
 export const deleteProductApi = (id) => axios.delete(`${API}/products/${id}`).then(r => r.data);
 
 export const updateProductApi = async (product) => {
