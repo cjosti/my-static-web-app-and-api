@@ -1,66 +1,39 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import ProductList from './ProductList';
+import useProducts from './useProducts';
+import { DELETE_PRODUCT } from '../store/product.actions';
 
-import { ButtonFooter, CardContent } from '../components';
+export default function Products() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { list, loading, error } = useProducts();
 
-function ProductList({
-  handleDeleteProduct,
-  handleSelectProduct,
-  products = [],
-}) {
-  const navigate = useNavigate(); // Use useNavigate hook for navigation
+  const handleSelectProduct = useCallback((product) => {
+    if (product?.id) navigate(`/products/${product.id}`);
+  }, [navigate]);
 
-  function selectProduct(e) {
-    const product = getSelectedProduct(e);
-    handleSelectProduct(product);
-    navigate(`/products/${product.id}`); // Replace history.push with navigate
-  }
+  const handleDeleteProduct = useCallback((product) => {
+    if (product?.id) dispatch({ type: DELETE_PRODUCT, payload: product.id });
+  }, [dispatch]);
 
-  function deleteProduct(e) {
-    const product = getSelectedProduct(e);
-    handleDeleteProduct(product);
-  }
-
-  function getSelectedProduct(e) {
-    const index = +e.currentTarget.dataset.index;
-    return products[index];
-  }
+  if (loading) return <div>Loading data ...</div>;
+  if (error) return <div>Erro: {String(error)}</div>;
 
   return (
-    <div>
-      {products && products.length === 0 && <div>Loading data ...</div>}
-      <ul className="list">
-        {products && products.map((product, index) => (
-          <li key={product.id} role="presentation">
-            <div className="card">
-              <CardContent
-                name={product.name}
-                description={product.description}
-              />
-              <footer className="card-footer">
-                <ButtonFooter
-                  className="delete-item"
-                  iconClasses="fas fa-trash"
-                  onClick={deleteProduct}
-                  label="Delete"
-                  dataIndex={index}
-                  dataId={product.id}
-                />
-                <ButtonFooter
-                  className="edit-item"
-                  iconClasses="fas fa-edit"
-                  onClick={selectProduct}
-                  label="Edit"
-                  dataIndex={index}
-                  dataId={product.id}
-                />
-              </footer>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <div style={{ padding: 8, fontSize: 12, color: '#666' }}>
+        Itens carregados: {Array.isArray(list) ? list.length : 0}
+      </div>
+      <ProductList
+        products={list}
+        handleSelectProduct={handleSelectProduct}
+        handleDeleteProduct={handleDeleteProduct}
+      />
+      {/* Debug opcional:
+      <pre style={{fontSize:12, background:'#f7f7f7', padding:8}}>{JSON.stringify(list, null, 2)}</pre>
+      */}
+    </>
   );
 }
-
-export default ProductList;

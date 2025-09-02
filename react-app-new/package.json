@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "set WDS_SOCKET_PORT=443 && react-scripts start",
+    "start": "react-scripts start",
+    "start:swa": "set WDS_SOCKET_PORT=433 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

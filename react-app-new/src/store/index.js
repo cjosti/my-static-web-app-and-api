@@ -1,13 +1,11 @@
 import { combineReducers } from 'redux';
-import { selectedProductReducer, productsReducer } from './product.reducer';
+import { productsReducer, selectedProductReducer } from './product.reducer';
 
-export * from './product.actions';
-export * from './product.reducer';
-export * from './product.saga';
+export { default as productSaga } from './product.saga';
 
-const store = combineReducers({
+const app = combineReducers({
   products: productsReducer,
   selectedProduct: selectedProductReducer,
 });
 
-export default store;
+export default app;

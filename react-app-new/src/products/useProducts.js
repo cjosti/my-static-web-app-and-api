@@ -1,31 +1,17 @@
-import { useCallback } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { LOAD_PRODUCT } from '../store/product.actions';
 
-import {
-  addProductAction,
-  deleteProductAction,
-  loadProductsAction,
-  selectProductAction,
-  updateProductAction,
-} from '../store';
-
-/** Custom hook for accessing Product state in redux store */
-function useProducts() {
+export default function useProducts() {
   const dispatch = useDispatch();
+  const slice = useSelector((s) => s.products || s.product || {});
+  const list =
+  Array.isArray(slice.list) ? slice.list :
+  Array.isArray(slice.data) ? slice.data : [];
 
-  return {
-    // Selectors
-    products: useSelector((state) => state.products.data),
-    selectedProduct: useSelector((state) => state.selectedProduct),
+  useEffect(() => {
+    dispatch({ type: LOAD_PRODUCT });
+  }, [dispatch]);
 
-    // Dispatchers
-    // Wrap any dispatcher that could be called within a useEffect() in a useCallback()
-    addProduct: (product) => dispatch(addProductAction(product)),
-    deleteProduct: (product) => dispatch(deleteProductAction(product)),
-    getProducts: useCallback(() => dispatch(loadProductsAction()), [dispatch]), // called within a useEffect()
-    selectProduct: (product) => dispatch(selectProductAction(product)),
-    updateProduct: (product) => dispatch(updateProductAction(product)),
-  };
+  return { list, loading: !!slice.loading, error: slice.error || null };
 }
-
-export default useProducts;
