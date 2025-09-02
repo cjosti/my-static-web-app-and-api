@@ -21,16 +21,12 @@ export function* watchLoadingProductsAsync() {
   yield takeEvery(LOAD_PRODUCT, loadingProductsAsync);
 }
 
-export function* deletingProductAsync({ payload: id }) {
-  try {
+export function* deletingProductAsync({ payload: id }) {  
     yield call(deleteProductApi, id); // 200/204 esperado
     // Atualiza o estado removendo localmente
     yield put({ type: DELETE_PRODUCT_SUCCESS, payload: id });
     // Opcional: re-carregar do servidor para garantir sync
-    // yield put({ type: LOAD_PRODUCT });
-  } catch (err) {
-    
-  }
+    // yield put({ type: LOAD_PRODUCT });  
 }
 
 export function* watchDeletingProductAsync() {
