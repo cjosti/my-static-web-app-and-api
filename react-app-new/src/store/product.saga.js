@@ -29,7 +29,7 @@ export function* deletingProductAsync({ payload: id }) {
     // Opcional: re-carregar do servidor para garantir sync
     // yield put({ type: LOAD_PRODUCT });
   } catch (err) {
-    console.error('[SAGA] delete error', err);
+    
   }
 }
 
